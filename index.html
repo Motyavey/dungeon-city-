@@ -557,7 +557,7 @@ if(d.t=='hp'){if(+d.hp<e.hp){e.hp=+d.hp;if(C&&C.m===e){C.lg.push('🤝 Союз�
 else if(d.t=='rm'){if(C&&C.m===e){e.hp=0;C.lg.push('🤝 Ворога добито союзником!');win()}else mpDel(e)}
 else if(d.t=='fg'&&e.k=='m'&&!C)msg('⚔️ '+String(d.n||'?').slice(0,12)+' б’ється з '+e.n+' — підійди й допоможи!')}
 // ===== Firebase Realtime Database transport (for the GitHub Pages version) =====
-const FB_URL='';
+const FB_URL='https://dungeon-city-default-rtdb.europe-west1.firebasedatabase.app/';
 const fbx=(m,p,b,q)=>fetch(FB_URL.replace(/\/$/,'')+p+'.json'+(q||''),{method:m,headers:{'Content-Type':'text/plain'},body:b==null?undefined:JSON.stringify(b)}).then(r=>r.json()).catch(()=>null);
 let FBL=null;function fbLobby(){if(FBL)return FBL;const cbs=[];let cache=[];const tick=async()=>{const[lb,pp]=await Promise.all([fbx('GET','/lobby'),fbx('GET','/pp')]),now=Date.now(),a=[];for(const c in lb||{}){const m=lb[c];if(!m||now-(m.hb||0)>20000)continue;a.push({isMe:false,peer:'h'+c,presence:{dc:{c,h:1,rn:m.rn,mx:m.mx,n:m.hn}}});const q=(pp&&pp[c])||{};for(const id in q)if(id!=m.hid&&q[id]&&now-(q[id].hb||0)<20000)a.push({isMe:false,peer:id,presence:{dc:{c}}})}cache=a;cbs.forEach(f=>f())};tick();FBL={peers:()=>cache,presence:()=>Promise.resolve(),onPeers:f=>{cbs.push(f);return()=>{}},t:setInterval(tick,2500)};return FBL}
 async function fbJoin(code){const ping=await fetch(FB_URL.replace(/\/$/,'')+'/.json?shallow=true').catch(()=>null);if(!ping||!ping.ok)throw new Error('база недоступна'+(ping?' ('+ping.status+'): перевір rules і адресу':': перевір адресу FB_URL і інтернет'));
